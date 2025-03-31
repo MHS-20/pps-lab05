@@ -24,14 +24,26 @@ trait Vector2D:
   def magnitude: Double
 
 object Vector2D:
-  // Factory method to create Vector2D instances
-  def apply(x: Double, y: Double): Vector2D = ???
-
-  // Common vectors (optional but nice)
+  def apply(x: Double, y: Double): Vector2D = Vector2DImpl(x,y)
   val zero: Vector2D = apply(0.0, 0.0)
-  val i: Vector2D = apply(1.0, 0.0) // Unit vector along x-axis
-  val j: Vector2D = apply(0.0, 1.0) // Unit vector along y-axis
+  val i: Vector2D = apply(1.0, 0.0)
+  val j: Vector2D = apply(0.0, 1.0)
 
+  case class Vector2DImpl(override val x : Double, override val y : Double) extends Vector2D:
+    override def +(other: Vector2D): Vector2D =
+      Vector2D(other.x + this.x, other.y + this.y)
+
+    override def -(other: Vector2D): Vector2D =
+      Vector2D(this.x - other.x, this.y - other.y)
+
+    override def *(s: Double): Vector2D =
+      Vector2D(this.x * s, this.y * s)
+
+    override def dot(other: Vector2D): Double =
+      this.x * other.x + this.y * other.y
+
+    override def magnitude: Double =
+      math.sqrt(x*x + y*y)
 
 /** Hints:
  *   - Implement Vector2D with a Vector2DImpl class.

@@ -12,7 +12,14 @@ trait Course:
 
 object Course:
   // Factory method for creating Course instances
-  def apply(courseId: String, title: String, instructor: String, category: String): Course = ???
+  def apply(courseId: String, title: String, instructor: String, category: String): Course =
+    CourseImpl(courseId: String, title: String, instructor: String, category: String)
+
+  case class CourseImpl(override val courseId: String,
+                        override val title: String,
+                        override val instructor: String,
+                        override val category: String) extends Course
+
 /**
  * Manages courses and student enrollments on an online learning platform.
  */
@@ -86,7 +93,69 @@ end OnlineCoursePlatform
 
 object OnlineCoursePlatform:
   // Factory method for creating an empty platform instance
-  def apply(): OnlineCoursePlatform = ??? // Fill Here!
+  def apply(): OnlineCoursePlatform = OnlineCoursePlatformImpl() // Fill Here!
+
+  case class OnlineCoursePlatformImpl(var courses: Set[Course] = Set.empty) extends OnlineCoursePlatform:
+    
+    def addCourse(course: Course): Unit =
+      courses = this.courses + course
+    
+    def findCoursesByCategory(category: String): Sequence[Course]
+      
+    
+    def getCourse(courseId: String): Optional[Course]
+
+    /**
+     * Removes a course from the platform's catalog.
+     * (Note: This basic version doesn't handle cascading removal of enrollments).
+     * @param course The course to remove.
+     */
+    def removeCourse(course: Course): Unit
+
+    /**
+     * Checks if a course with the given ID exists in the catalog.
+     *
+     * @param courseId The ID to check.
+     * @return true if the course exists, false otherwise.
+     */
+    def isCourseAvailable(courseId: String): Boolean
+
+    /**
+     * Enrolls a student in a specific course.
+     * Assumes studentId is unique for each student.
+     *
+     * @param studentId The ID of the student.
+     * @param courseId  The ID of the course to enroll in.
+     *                  Fails silently if the course doesn't exist.
+     */
+    def enrollStudent(studentId: String, courseId: String): Unit
+
+    /**
+     * Unenrolls a student from a specific course.
+     *
+     * @param studentId The ID of the student.
+     * @param courseId  The ID of the course to unenroll from.
+     */
+    def unenrollStudent(studentId: String, courseId: String): Unit
+
+    /**
+     * Retrieves all courses a specific student is enrolled in.
+     *
+     * @param studentId The ID of the student.
+     * @return A sequence of courses the student is enrolled in.
+     */
+    def getStudentEnrollments(studentId: String): Sequence[Course]
+
+    /**
+     * Checks if a student is enrolled in a specific course.
+     *
+     * @param studentId The ID of the student.
+     * @param courseId  The ID of the course.
+     * @return true if the student is enrolled, false otherwise.
+     */
+    def isStudentEnrolled(studentId: String, courseId: String): Boolean
+
+
 
 /**
  * Represents an online learning platform that offers courses and manages student enrollments.
